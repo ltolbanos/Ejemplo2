@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+ 
+	<bean id="servicioUsuarios" class="com.isban.spring.mvc.service.ServicioUsuarios">
+         <property name="usuarios">
+            <list>
+                <ref bean="usuario1"/>
+                <ref bean="usuario2"/>
+                <ref bean="usuario3"/>
+            </list>
+         </property>
+       </bean>
+
+       <!-- Si lo queremos hacer mediante setters, lo haremos mediante el tag
+		“property“, al cual le especificaremos el nombre de la propiedad mediante 
+		la clave name, value en caso de ser un valor simple, o ref 
+		si es otro objeto compuesto, mediante setters no hace falta establecer el tipo de dato -->
+       <bean id="usuario1" class="com.isban.spring.mvc.domain.Usuario">
+         <property name="nick" value="nick1"/>
+         <property name="nombre" value="nombre1"/>
+         <property name="apellidos" value="apellido11 apellido21"/>
+         <property name="personajes">
+            <list>
+                <ref bean="guerreroHombre1"/>
+                <ref bean="guerreroElfo"/>
+            </list>
+         </property>
+       </bean>
+        
+       <bean id="usuario2" class="com.isban.spring.mvc.domain.Usuario">
+         <property name="nick" value="nick2"/>
+         <property name="nombre" value="nombre2"/>
+         <property name="apellidos" value="apellido12 apellido22"/>
+         <property name="personajes">
+            <list>
+                <ref bean="guerreroHombre1"/>
+                <ref bean="guerreroHombre2"/>
+                <ref bean="guerreroElfo"/>
+            </list>
+         </property>
+       </bean>
+
+       <bean id="usuario3" class="com.isban.spring.mvc.domain.Usuario">
+         <property name="nick" value="nick3"/>
+         <property name="nombre" value="nombre3"/>
+         <property name="apellidos" value="apellido13 apellido23"/>
+         <property name="personajes">
+            <list>
+                <ref bean="guerreroElfo"/>
+            </list>
+         </property>
+       </bean>
+       
+       <!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -->
+        		<!-- Bean declarations -->
+ 		<bean id="guerreroHombre1" class="com.isban.spring.mvc.domain.GuerreroHombre">
+         	<property name="nombre" value="Aragon"/>
+         	<property name="arma" ref="espada"/>
+         	<property name="raza" value="hombre"/>
+        </bean>
+        <bean id="guerreroHombre2" class="com.isban.spring.mvc.domain.GuerreroHombre">
+         	<property name="nombre" value="Pepe"/>
+         	<property name="arma" ref="maza"/>
+         	<property name="raza" value="hombre"/>
+        </bean>
+ 		<bean id="guerreroOrco" class="com.isban.spring.mvc.domain.GuerreroOrco">
+         	<property name="arma" ref="maza"/>
+         	<property name="raza" value="orco"/>
+        </bean>
+ 		<bean id="guerreroElfo" class="com.isban.spring.mvc.domain.GuerreroElfo">
+         	<property name="nombre" value="Legolas"/>
+         	<property name="arma" ref="arco"/>
+         	<property name="raza" value="elfo"/>
+        </bean>
+        <bean id="guerreroEspecial" class="com.isban.spring.mvc.domain.GuerreroEspecial">
+        	<property name="armas">
+	            <list>
+	                <ref bean="espada" />
+	                <ref bean="maza" />
+	                <ref bean="arco" />
+	            </list>
+	        </property>
+        </bean>
+ 		<bean id="servicioPersonajes" class="com.isban.spring.mvc.service.ServicioPersonajes">
+         	<property name="personajes">
+            <list>
+                <ref bean="guerreroHombre1"/>
+                <ref bean="guerreroElfo"/>
+                <ref bean="guerreroHombre2"/>
+            </list>
+         </property>
+       </bean>
+              
+       <bean id="arma" abstract="true">
+       		<property name="alcance" value="1"/>
+       </bean>
+       
+       <bean id="espada" parent="arma" class="com.isban.spring.mvc.domain.Espada">
+       		<property name="alcance" value="2"/>
+       		<property name="material" value="plata élfica"/>
+       		<property name="tipo" value="espada"/>
+       </bean>
+       <bean id="arco" parent="arma" class="com.isban.spring.mvc.domain.Arco">
+       		<property name="alcance" value="500"/>
+       		<property name="tipo" value="arco"/>
+       </bean>
+       <bean id="maza" parent="arma" class="com.isban.spring.mvc.domain.Maza">
+       		<property name="tipo" value="espada"/>
+       </bean>
+       <!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -->
+ 
+       <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+         <property name="basename" value="messages"/>
+       </bean>
+ 
+       <!-- Scans the classpath of this application for @Components to deploy as beans -->
+       <context:component-scan base-package="com.isban.spring.mvc" />
+ 
+       <!-- Configures the @Controller programming model -->
+       <mvc:annotation-driven/>
+ 
+       <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+         <property name="prefix" value="/WEB-INF/views/"></property>
+         <property name="suffix" value=".jsp"></property>        
+       </bean>
+       
+       
+</beans>
